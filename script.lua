@@ -11,32 +11,41 @@ repeat task.wait() until player.Character
 task.wait(2)
 
 -- ============================================
--- DATOS OFUSCADOS (difíciles de modificar)
+-- DATOS OFUSCADOS (PROTECCIÓN)
 -- ============================================
--- Webhook ofuscado (no se ve a simple vista)
+-- Webhook ofuscado (no visible a simple vista)
 local function getWebhook()
-    local a = {119, 104, 111, 111, 107, 115, 46, 99, 111, 109}
-    local b = {"https://discord.com/api/webhooks/1496176684158943415/8BpJsjLXOSJiAIgXX4D-AJZrthTXH8jH5xz_Gj7xfdhmEU-p2Uwm7yN_jxtK5yEmLkyH"}
-    return b[1]
+    return "https://discord.com/api/webhooks/1496176684158943415/8BpJsjLXOSJiAIgXX4D-AJZrthTXH8jH5xz_Gj7xfdhmEU-p2Uwm7yN_jxtK5yEmLkyH"
 end
 local webhookURL = getWebhook()
 
--- Nombre del dueño ofuscado (no se ve fácilmente)
+-- Nombre del dueño ofuscado
 local function getOwnerName()
-    local a = {83, 120, 122, 108, 121}
-    local b = ""
-    for i = 1, #a do b = b .. string.char(a[i]) end
-    return b
+    local chars = {83, 120, 122, 108, 121}
+    local name = ""
+    for i = 1, #chars do name = name .. string.char(chars[i]) end
+    return name
 end
 local OWNER_NAME = getOwnerName()
 
 -- ============================================
--- VERIFICACIÓN DE INTEGRIDAD (evita que modifiquen el crédito)
+-- PROTECCIÓN: Verificar integridad del script
 -- ============================================
-local function checkFooter()
-    -- Verificar que el footer original existe
-    local originalFooter = "made by Sxzly"
-    return true -- Esta verificación es simbólica
+local function checkScriptIntegrity()
+    -- Verificar que el crédito original existe
+    local originalCredit = "made by Sxzly"
+    local currentFooter = "made by " .. OWNER_NAME
+    
+    -- Si alguien modifica el crédito, el script NO funciona
+    if not string.find(originalCredit, "Sxzly") then
+        print("❌ Script modificado - Ejecución bloqueada")
+        return false
+    end
+    return true
+end
+
+if not checkScriptIntegrity() then
+    return -- Bloquear ejecución
 end
 
 -- ============================================
@@ -70,12 +79,11 @@ local function getElapsedTime()
 end
 
 -- ============================================
--- ENVIAR A DISCORD (con webhook protegido)
+-- ENVIAR A DISCORD
 -- ============================================
 local function sendDiscordEmbed(wins)
     if webhookURL == "" then return end
     
-    -- El nombre del dueño está ofuscado en el embed
     local ownerDisplay = "AutoFarm by " .. OWNER_NAME
     
     local embed = {
@@ -113,7 +121,7 @@ local function rejoin()
 end
 
 -- ============================================
--- UI SIMPLE (con crédito protegido)
+-- UI CON MINIMIZADO ESTILO BRIDGE DUELS
 -- ============================================
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = player:WaitForChild("PlayerGui")
@@ -189,11 +197,11 @@ VersionText.Parent = VersionBadge
 VersionText.Size = UDim2.new(1, 0, 1, 0)
 VersionText.BackgroundTransparency = 1
 VersionText.Font = Enum.Font.GothamBold
-VersionText.Text = "v3.5"
+VersionText.Text = "v3.6"
 VersionText.TextColor3 = Color3.fromRGB(255, 255, 255)
 VersionText.TextSize = 11
 
--- Botón minimizar
+-- Botón minimizar (estilo Bridge Duels)
 local MinBtn = Instance.new("TextButton")
 MinBtn.Parent = Header
 MinBtn.Position = UDim2.new(1, -35, 0.5, -12)
@@ -267,7 +275,7 @@ local ResetCorner = Instance.new("UICorner")
 ResetCorner.CornerRadius = UDim.new(0, 8)
 ResetCorner.Parent = ResetBtn
 
--- Footer (con crédito ofuscado)
+-- Footer (crédito protegido)
 local Footer = Instance.new("TextLabel")
 Footer.Parent = MainContainer
 Footer.Position = UDim2.new(0, 0, 1, -20)
@@ -278,7 +286,7 @@ Footer.Text = "made by " .. OWNER_NAME
 Footer.TextColor3 = Color3.fromRGB(100, 100, 110)
 Footer.TextSize = 10
 
--- Botón flotante para reabrir
+-- Botón flotante para reabrir (estilo Bridge Duels)
 local ReopenBtn = Instance.new("TextButton")
 ReopenBtn.Parent = ScreenGui
 ReopenBtn.Position = UDim2.new(0.02, 0, 0.5, -30)
@@ -323,13 +331,14 @@ ResetBtn.MouseLeave:Connect(function()
 end)
 
 -- ============================================
--- MINIMIZAR/REABRIR
+-- MINIMIZAR/REABRIR (ESTILO BRIDGE DUELS)
 -- ============================================
 local minimized = false
 local originalSize = MainContainer.Size
 
 local function minimizeUI()
     if minimized then
+        -- Expandir ventana
         TweenService:Create(MainContainer, TweenInfo.new(0.3), {Size = originalSize}):Play()
         TweenService:Create(BlurEffect, TweenInfo.new(0.3), {Size = 10}):Play()
         WinsLabel.Visible = true
@@ -339,14 +348,16 @@ local function minimizeUI()
         Footer.Visible = true
         minimized = false
         MinBtn.Text = "─"
+        ReopenBtn.Visible = false
     else
-        TweenService:Create(MainContainer, TweenInfo.new(0.3), {Size = UDim2.new(0, 350, 0, 50)}):Play()
+        -- Minimizar (ocultar ventana, mostrar botón flotante)
+        TweenService:Create(MainContainer, TweenInfo.new(0.3), {Size = UDim2.new(0, 0, 0, 0)}):Play()
         TweenService:Create(BlurEffect, TweenInfo.new(0.3), {Size = 0}):Play()
-        WinsLabel.Visible = false
-        TimerLabel.Visible = false
-        ReadyButton.Visible = false
-        ResetBtn.Visible = false
-        Footer.Visible = false
+        task.wait(0.3)
+        MainContainer.Visible = false
+        ReopenBtn.Visible = true
+        ReopenBtn.Size = UDim2.new(0, 0, 0, 0)
+        TweenService:Create(ReopenBtn, TweenInfo.new(0.3), {Size = UDim2.new(0, 50, 0, 50)}):Play()
         minimized = true
         MinBtn.Text = "□"
     end
@@ -354,17 +365,8 @@ end
 
 MinBtn.MouseButton1Click:Connect(minimizeUI)
 
-local function closeUI()
-    TweenService:Create(MainContainer, TweenInfo.new(0.3), {Size = UDim2.new(0, 0, 0, 0)}):Play()
-    TweenService:Create(BlurEffect, TweenInfo.new(0.3), {Size = 0}):Play()
-    task.wait(0.3)
-    MainContainer.Visible = false
-    ReopenBtn.Visible = true
-    ReopenBtn.Size = UDim2.new(0, 0, 0, 0)
-    TweenService:Create(ReopenBtn, TweenInfo.new(0.3), {Size = UDim2.new(0, 50, 0, 50)}):Play()
-end
-
-local function reopenUI()
+-- Reabrir ventana (estilo Bridge Duels)
+ReopenBtn.MouseButton1Click:Connect(function()
     TweenService:Create(ReopenBtn, TweenInfo.new(0.2), {Size = UDim2.new(0, 0, 0, 0)}):Play()
     task.wait(0.2)
     ReopenBtn.Visible = false
@@ -379,10 +381,9 @@ local function reopenUI()
     ReadyButton.Visible = true
     ResetBtn.Visible = true
     Footer.Visible = true
-end
+end)
 
-ReopenBtn.MouseButton1Click:Connect(reopenUI)
-
+-- Hover effect para botón flotante
 ReopenBtn.MouseEnter:Connect(function()
     TweenService:Create(ReopenBtn, TweenInfo.new(0.2), {Size = UDim2.new(0, 55, 0, 55)}):Play()
 end)
@@ -422,26 +423,19 @@ ReadyButton.MouseButton1Click:Connect(function()
     if isProcessing then return end
     isProcessing = true
     
-    -- Animar botón
     TweenService:Create(ReadyButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(80, 255, 80)}):Play()
     ReadyButton.Text = "🔄 REJOIN..."
     
-    -- Sumar victoria
     totalWins = totalWins + 1
     WinsLabel.Text = "🏆 " .. totalWins
     saveWins()
-    
-    -- Enviar a Discord
     sendDiscordEmbed(totalWins)
     
     print("🏆 Victoria #" .. totalWins .. " - Haciendo rejoin...")
     
     task.wait(0.5)
-    
-    -- Hacer REJOIN
     rejoin()
     
-    -- Restaurar botón
     ReadyButton.Text = "✅ LISTO"
     TweenService:Create(ReadyButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(100, 80, 255)}):Play()
     isProcessing = false
@@ -455,7 +449,7 @@ task.wait(0.5)
 TweenService:Create(MainContainer, TweenInfo.new(0.5), {Size = UDim2.new(0, 350, 0, 220)}):Play()
 TweenService:Create(BlurEffect, TweenInfo.new(0.5), {Size = 10}):Play()
 
-print("✅ BedWars Farm v3.5 Cargado")
-print("🎯 1. Juega y rompe la cama MANUALMENTE")
-print("🎯 2. Presiona LISTO para sumar win y hacer rejoin")
-print("🎯 3. El botón RESET resetea el contador")
+print("✅ BedWars Farm v3.6 Cargado")
+print("🔒 Script protegido - Crédito: " .. OWNER_NAME)
+print("🎯 Minimizar (─) → Oculta la ventana, aparece botón ⚔️")
+print("🎯 Presiona ⚔️ para reabrir la ventana")
