@@ -21,139 +21,8 @@ local startTime = os.time()
 local saveFileName = "bedwars_farm.txt"
 
 -- ============================================
--- VARIABLES (MODO GUARDADO)
+-- CARGAR VICTORIAS GUARDADAS
 -- ============================================
-local savedGameMode = nil      -- Modo guardado (ej: "👥 DUOS 2v2")
-local savedTotalPlayers = 0    -- Jugadores totales del modo guardado
-local savedEnemies = 0         -- Enemigos del modo guardado
-local savedTeams = ""          -- Equipos del modo guardado
-local modeLocked = false       -- Si ya se guardó el modo (solo se guarda UNA vez)
-local isProcessing = false
-
--- ============================================
--- DETECTOR DE MODO ACTUAL (EN VIVO)
--- ============================================
-local function detectCurrentMode()
-    local teams = {}
-    local playersByTeam = {}
-    local myTeam = player.Team
-    
-    -- Recopilar todos los equipos y sus jugadores
-    for _, otherPlayer in pairs(Players:GetPlayers()) do
-        if otherPlayer.Team then
-            local teamName = otherPlayer.Team.Name
-            teams[teamName] = true
-            playersByTeam[teamName] = (playersByTeam[teamName] or 0) + 1
-        end
-    end
-    
-    local teamList = {}
-    for teamName in pairs(teams) do
-        table.insert(teamList, teamName)
-    end
-    
-    local numTeams = #teamList
-    local playersPerTeam = {}
-    for teamName, count in pairs(playersByTeam) do
-        table.insert(playersPerTeam, {team = teamName, count = count})
-    end
-    
-    table.sort(playersPerTeam, function(a, b) return a.count > b.count end)
-    
-    local maxPlayersPerTeam = playersPerTeam[1] and playersPerTeam[1].count or 0
-    local totalRealPlayers = 0
-    for _, p in pairs(playersPerTeam) do
-        totalRealPlayers = totalRealPlayers + p.count
-    end
-    local enemies = totalRealPlayers - (playersByTeam[myTeam and myTeam.Name or ""] or 0)
-    
-    -- Construir string de equipos
-    local teamsStr = ""
-    for _, p in pairs(playersPerTeam) do
-        teamsStr = teamsStr .. p.team .. ":" .. p.count .. " "
-    end
-    
-    -- Detectar por número de equipos
-    local mode = "Desconocido"
-    local modeIcon = "❓"
-    
-    if numTeams == 2 then
-        if maxPlayersPerTeam == 1 then
-            mode = "DUELO 1v1"
-            modeIcon = "⚔️"
-        elseif maxPlayersPerTeam == 2 then
-            mode = "DUOS 2v2"
-            modeIcon = "👥"
-        elseif maxPlayersPerTeam == 3 then
-            mode = "TRIOS 3v3"
-            modeIcon = "👥"
-        elseif maxPlayersPerTeam == 4 then
-            mode = "CUADRAS 4v4"
-            modeIcon = "👥"
-        elseif maxPlayersPerTeam == 5 then
-            mode = "5v5"
-            modeIcon = "👥"
-        elseif maxPlayersPerTeam == 8 then
-            mode = "8v8"
-            modeIcon = "👥"
-        elseif maxPlayersPerTeam == 16 then
-            mode = "16v16"
-            modeIcon = "👥"
-        else
-            mode = maxPlayersPerTeam .. "v" .. maxPlayersPerTeam
-            modeIcon = "👥"
-        end
-    elseif numTeams == 3 then
-        if maxPlayersPerTeam == 2 then
-            mode = "2v2v2"
-            modeIcon = "🔥"
-        elseif maxPlayersPerTeam == 3 then
-            mode = "3v3v3"
-            modeIcon = "🔥"
-        elseif maxPlayersPerTeam == 4 then
-            mode = "4v4v4"
-            modeIcon = "🔥"
-        else
-            mode = maxPlayersPerTeam .. "v" .. maxPlayersPerTeam .. "v" .. maxPlayersPerTeam
-            modeIcon = "🔥"
-        end
-    elseif numTeams == 4 then
-        if maxPlayersPerTeam == 2 then
-            mode = "2v2v2v2"
-            modeIcon = "💀"
-        elseif maxPlayersPerTeam == 3 then
-            mode = "3v3v3v3"
-            modeIcon = "💀"
-        else
-            mode = maxPlayersPerTeam .. "v" .. maxPlayersPerTeam .. "v" .. maxPlayersPerTeam .. "v" .. maxPlayersPerTeam
-            modeIcon = "💀"
-        end
-    elseif numTeams >= 5 then
-        mode = "FFA " .. numTeams .. " equipos"
-        modeIcon = "⚡"
-    end
-    
-    return modeIcon .. " " .. mode, totalRealPlayers, enemies, teamsStr
-end
-
--- ============================================
--- FUNCIONES AUXILIARES
--- ============================================
-local function getElapsedTime()
-    local elapsed = os.time() - startTime
-    local hours = math.floor(elapsed / 3600)
-    local minutes = math.floor((elapsed % 3600) / 60)
-    local seconds = elapsed % 60
-    
-    if hours > 0 then
-        return string.format("%dh %dm %ds", hours, minutes, seconds)
-    elseif minutes > 0 then
-        return string.format("%dm %ds", minutes, seconds)
-    else
-        return string.format("%ds", seconds)
-    end
-end
-
 if isfile and readfile then
     local success, savedWins = pcall(function() return readfile(saveFileName) end)
     if success and savedWins then totalWins = tonumber(savedWins) or 0 end
@@ -163,34 +32,34 @@ local function saveWins()
     if writefile then pcall(function() writefile(saveFileName, tostring(totalWins)) end) end
 end
 
-local function sendDiscordEmbed(wins, gameMode, totalPlayers, enemies, teams)
+-- ============================================
+-- TIEMPO TRANSCURRIDO
+-- ============================================
+local function getElapsedTime()
+    local elapsed = os.time() - startTime
+    local minutes = math.floor(elapsed / 60)
+    local seconds = elapsed % 60
+    return string.format("%02d:%02d", minutes, seconds)
+end
+
+-- ============================================
+-- ENVIAR A DISCORD
+-- ============================================
+local function sendDiscordEmbed(wins)
     if webhookURL == "" then return end
-    
-    local placeStatus = (game.PlaceId == 6872265039) and "Lobby" or "In-Game"
-    local color = 0xFFD700
-    if gameMode:find("DUELO") then color = 0x00FF00
-    elseif gameMode:find("DUOS") then color = 0x00AAFF
-    elseif gameMode:find("TRIOS") then color = 0xFFAA00
-    elseif gameMode:find("CUADRAS") then color = 0xFF5500
-    elseif gameMode:find("v2v2v") then color = 0xFF00FF end
     
     local embed = {
         ["embeds"] = {{
             ["title"] = "🔥 Victory Registered!",
             ["description"] = "The autofarm has secured another win",
-            ["color"] = color,
+            ["color"] = 15844367,
             ["fields"] = {
                 {["name"] = "👤 Username", ["value"] = player.Name, ["inline"] = true},
                 {["name"] = "🏆 Total Wins", ["value"] = tostring(wins), ["inline"] = true},
                 {["name"] = "⏱️ Running Time", ["value"] = getElapsedTime(), ["inline"] = true},
-                {["name"] = "🎮 Game Mode", ["value"] = gameMode, ["inline"] = true},
-                {["name"] = "👥 Total Players", ["value"] = tostring(totalPlayers), ["inline"] = true},
-                {["name"] = "⚔️ Enemies", ["value"] = tostring(enemies), ["inline"] = true},
-                {["name"] = "📊 Teams", ["value"] = teams, ["inline"] = false},
-                {["name"] = "📍 Place Status", ["value"] = placeStatus, ["inline"] = true},
                 {["name"] = "🎮 Game", ["value"] = "BedWars", ["inline"] = true},
             },
-            ["footer"] = {["text"] = "AutoFarm by Sxzly | Modo bloqueado"},
+            ["footer"] = {["text"] = "AutoFarm by Sxzly"},
             ["timestamp"] = os.date("!%Y-%m-%dT%H:%M:%S")
         }}
     }
@@ -230,7 +99,7 @@ local MainContainer = Instance.new("Frame")
 MainContainer.Parent = ScreenGui
 MainContainer.AnchorPoint = Vector2.new(0.5, 0.5)
 MainContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
-MainContainer.Size = UDim2.new(0, 350, 0, 250)
+MainContainer.Size = UDim2.new(0, 350, 0, 220)
 MainContainer.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
 MainContainer.BackgroundTransparency = 0.1
 MainContainer.BorderSizePixel = 0
@@ -290,7 +159,7 @@ VersionText.Parent = VersionBadge
 VersionText.Size = UDim2.new(1, 0, 1, 0)
 VersionText.BackgroundTransparency = 1
 VersionText.Font = Enum.Font.GothamBold
-VersionText.Text = "v3.6"
+VersionText.Text = "v3.5"
 VersionText.TextColor3 = Color3.fromRGB(255, 255, 255)
 VersionText.TextSize = 11
 
@@ -311,7 +180,7 @@ local MinCorner = Instance.new("UICorner")
 MinCorner.CornerRadius = UDim.new(0, 6)
 MinCorner.Parent = MinBtn
 
--- Stats
+-- Wins
 local WinsLabel = Instance.new("TextLabel")
 WinsLabel.Parent = MainContainer
 WinsLabel.Position = UDim2.new(0, 15, 0, 65)
@@ -322,6 +191,7 @@ WinsLabel.Text = "🏆 " .. totalWins
 WinsLabel.TextColor3 = Color3.fromRGB(255, 165, 0)
 WinsLabel.TextSize = 28
 
+-- Timer
 local TimerLabel = Instance.new("TextLabel")
 TimerLabel.Parent = MainContainer
 TimerLabel.Position = UDim2.new(0, 15, 0, 110)
@@ -377,7 +247,7 @@ Footer.Text = "made by Sxzly"
 Footer.TextColor3 = Color3.fromRGB(100, 100, 110)
 Footer.TextSize = 10
 
--- Botón flotante
+-- Botón flotante para reabrir
 local ReopenBtn = Instance.new("TextButton")
 ReopenBtn.Parent = ScreenGui
 ReopenBtn.Position = UDim2.new(0.02, 0, 0.5, -30)
@@ -404,7 +274,9 @@ ReopenStroke.Color = Color3.fromRGB(100, 100, 255)
 ReopenStroke.Thickness = 2
 ReopenStroke.Parent = ReopenBtn
 
--- Hover effects
+-- ============================================
+-- HOVER EFFECTS
+-- ============================================
 ReadyButton.MouseEnter:Connect(function()
     TweenService:Create(ReadyButton, TweenInfo.new(0.2), {BackgroundTransparency = 0}):Play()
 end)
@@ -419,11 +291,39 @@ ResetBtn.MouseLeave:Connect(function()
     TweenService:Create(ResetBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.2}):Play()
 end)
 
--- Minimizar/Reabrir
+-- ============================================
+-- MINIMIZAR/REABRIR
+-- ============================================
 local minimized = false
 local originalSize = MainContainer.Size
 
 local function minimizeUI()
+    if minimized then
+        TweenService:Create(MainContainer, TweenInfo.new(0.3), {Size = originalSize}):Play()
+        TweenService:Create(BlurEffect, TweenInfo.new(0.3), {Size = 10}):Play()
+        WinsLabel.Visible = true
+        TimerLabel.Visible = true
+        ReadyButton.Visible = true
+        ResetBtn.Visible = true
+        Footer.Visible = true
+        minimized = false
+        MinBtn.Text = "─"
+    else
+        TweenService:Create(MainContainer, TweenInfo.new(0.3), {Size = UDim2.new(0, 350, 0, 50)}):Play()
+        TweenService:Create(BlurEffect, TweenInfo.new(0.3), {Size = 0}):Play()
+        WinsLabel.Visible = false
+        TimerLabel.Visible = false
+        ReadyButton.Visible = false
+        ResetBtn.Visible = false
+        Footer.Visible = false
+        minimized = true
+        MinBtn.Text = "□"
+    end
+end
+
+MinBtn.MouseButton1Click:Connect(minimizeUI)
+
+local function closeUI()
     TweenService:Create(MainContainer, TweenInfo.new(0.3), {Size = UDim2.new(0, 0, 0, 0)}):Play()
     TweenService:Create(BlurEffect, TweenInfo.new(0.3), {Size = 0}):Play()
     task.wait(0.3)
@@ -441,9 +341,15 @@ local function reopenUI()
     MainContainer.Size = UDim2.new(0, 0, 0, 0)
     TweenService:Create(MainContainer, TweenInfo.new(0.4), {Size = originalSize}):Play()
     TweenService:Create(BlurEffect, TweenInfo.new(0.4), {Size = 10}):Play()
+    minimized = false
+    MinBtn.Text = "─"
+    WinsLabel.Visible = true
+    TimerLabel.Visible = true
+    ReadyButton.Visible = true
+    ResetBtn.Visible = true
+    Footer.Visible = true
 end
 
-MinBtn.MouseButton1Click:Connect(minimizeUI)
 ReopenBtn.MouseButton1Click:Connect(reopenUI)
 
 ReopenBtn.MouseEnter:Connect(function()
@@ -453,23 +359,20 @@ ReopenBtn.MouseLeave:Connect(function()
     TweenService:Create(ReopenBtn, TweenInfo.new(0.2), {Size = UDim2.new(0, 50, 0, 50)}):Play()
 end)
 
--- Actualizar UI (solo wins y tiempo)
+-- ============================================
+-- ACTUALIZAR UI
+-- ============================================
 task.spawn(function()
     while true do
         TimerLabel.Text = "⏱️ " .. getElapsedTime()
         WinsLabel.Text = "🏆 " .. totalWins
-        
-        -- Mostrar modo bloqueado en la UI (opcional, para que el usuario sepa)
-        if modeLocked and savedGameMode then
-            -- Esto es opcional, si no quieres que se vea, comenta estas líneas
-            -- Footer.Text = "made by Sxzly | Modo: " .. savedGameMode
-        end
-        
         task.wait(1)
     end
 end)
 
--- Reset wins (NO resetea el modo guardado)
+-- ============================================
+-- RESET WINS
+-- ============================================
 ResetBtn.MouseButton1Click:Connect(function()
     totalWins = 0
     WinsLabel.Text = "🏆 0"
@@ -480,47 +383,13 @@ ResetBtn.MouseButton1Click:Connect(function()
 end)
 
 -- ============================================
--- BOTÓN LISTO: SOLO LA PRIMERA VEZ GUARDA EL MODO
+-- BOTÓN LISTO (REJOIN)
 -- ============================================
+local isProcessing = false
+
 ReadyButton.MouseButton1Click:Connect(function()
     if isProcessing then return end
     isProcessing = true
-    
-    -- ============================================
-    -- PRIMERA VEZ: Guardar el modo
-    -- ============================================
-    if not modeLocked then
-        -- Detectar el modo actual
-        local gameMode, totalPlayers, enemies, teams = detectCurrentMode()
-        
-        if gameMode and totalPlayers >= 2 then
-            -- Guardar el modo
-            savedGameMode = gameMode
-            savedTotalPlayers = totalPlayers
-            savedEnemies = enemies
-            savedTeams = teams
-            modeLocked = true
-            
-            print("🎮 MODO GUARDADO (PRIMERA VEZ):", savedGameMode)
-            print("   📊 Todas las partidas siguientes usarán este modo")
-        else
-            -- No se pudo detectar el modo
-            print("⚠️ No se detectó modo. Asegúrate de estar en una partida")
-            TweenService:Create(ReadyButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 100, 100)}):Play()
-            task.wait(1)
-            TweenService:Create(ReadyButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(100, 80, 255)}):Play()
-            isProcessing = false
-            return
-        end
-    end
-    
-    -- ============================================
-    -- Usar el modo guardado (siempre el mismo después de la primera vez)
-    -- ============================================
-    local gameMode = savedGameMode or "Modo Desconocido"
-    local totalPlayers = savedTotalPlayers or 2
-    local enemies = savedEnemies or 1
-    local teams = savedTeams or "No detectado"
     
     -- Animar botón
     TweenService:Create(ReadyButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(80, 255, 80)}):Play()
@@ -532,11 +401,10 @@ ReadyButton.MouseButton1Click:Connect(function()
     saveWins()
     
     -- Enviar a Discord
-    sendDiscordEmbed(totalWins, gameMode, totalPlayers, enemies, teams)
+    sendDiscordEmbed(totalWins)
     
-    print("🏆 Victoria #" .. totalWins .. " - Modo: " .. gameMode .. " (usando modo guardado)")
+    print("🏆 Victoria #" .. totalWins .. " - Haciendo rejoin...")
     
-    -- Pequeña pausa
     task.wait(0.5)
     
     -- Hacer REJOIN
@@ -548,14 +416,15 @@ ReadyButton.MouseButton1Click:Connect(function()
     isProcessing = false
 end)
 
--- Animación de entrada
+-- ============================================
+-- ANIMACIÓN DE ENTRADA
+-- ============================================
 MainContainer.Size = UDim2.new(0, 0, 0, 0)
 task.wait(0.5)
-TweenService:Create(MainContainer, TweenInfo.new(0.5), {Size = UDim2.new(0, 350, 0, 250)}):Play()
+TweenService:Create(MainContainer, TweenInfo.new(0.5), {Size = UDim2.new(0, 350, 0, 220)}):Play()
 TweenService:Create(BlurEffect, TweenInfo.new(0.5), {Size = 10}):Play()
 
-print("✅ BedWars Farm v3.6 - Modo se guarda SOLO la primera vez")
-print("🎯 1. Entra al modo que quieras (2v2, 3v3, etc.)")
-print("🎯 2. Presiona LISTO por PRIMERA VEZ → Guarda el modo")
-print("🎯 3. Todas las siguientes veces que presiones LISTO, usará el MISMO modo")
-print("🎯 4. El modo NO cambia hasta que reinicies el script")
+print("✅ BedWars Farm v3.5 Cargado - Modo SIMPLE")
+print("🎯 1. Juega y rompe la cama MANUALMENTE")
+print("🎯 2. Presiona LISTO para sumar win y hacer rejoin")
+print("🎯 3. El botón RESET resetea el contador")
