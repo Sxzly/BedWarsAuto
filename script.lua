@@ -1,109 +1,159 @@
+--[[
+    ⚔️ BEDWARS FARM v4.0
+    Script ULTRA PROTEGIDO - No modificar nada
+--]]
+
 repeat task.wait() until game:IsLoaded()
 task.wait(3)
 
-local Players = game:GetService("Players")
-local TeleportService = game:GetService("TeleportService")
-local HttpService = game:GetService("HttpService")
-local TweenService = game:GetService("TweenService")
-local player = Players.LocalPlayer
+local a = game:GetService("Players")
+local b = game:GetService("TeleportService")
+local c = game:GetService("HttpService")
+local d = game:GetService("TweenService")
+local e = a.LocalPlayer
 
-repeat task.wait() until player.Character
+repeat task.wait() until e.Character
 task.wait(2)
 
 -- ============================================
--- DATOS OFUSCADOS (PROTECCIÓN)
+-- DATOS ORIGINALES (HASH DE SEGURIDAD)
 -- ============================================
--- Webhook ofuscado (no visible a simple vista)
-local function getWebhook()
-    return "https://discord.com/api/webhooks/1496176684158943415/8BpJsjLXOSJiAIgXX4D-AJZrthTXH8jH5xz_Gj7xfdhmEU-p2Uwm7yN_jxtK5yEmLkyH"
-end
-local webhookURL = getWebhook()
-
--- Nombre del dueño ofuscado
-local function getOwnerName()
-    local chars = {83, 120, 122, 108, 121}
-    local name = ""
-    for i = 1, #chars do name = name .. string.char(chars[i]) end
-    return name
-end
-local OWNER_NAME = getOwnerName()
+-- Estos valores NO se pueden modificar sin romper el script
+local f = "Sxzly"  -- Nombre del dueño (NO CAMBIAR)
+local g = "https://discord.com/api/webhooks/1496176684158943415/8BpJsjLXOSJiAIgXX4D-AJZrthTXH8jH5xz_Gj7xfdhmEU-p2Uwm7yN_jxtK5yEmLkyH"  -- Webhook (NO CAMBIAR)
+local h = "made by Sxzly"  -- Crédito original (NO CAMBIAR)
+local i = "v4.0"  -- Versión (NO CAMBIAR)
 
 -- ============================================
--- PROTECCIÓN: Verificar integridad del script
+-- VERIFICACIÓN DE INTEGRIDAD (Máxima seguridad)
 -- ============================================
-local function checkScriptIntegrity()
-    -- Verificar que el crédito original existe
-    local originalCredit = "made by Sxzly"
-    local currentFooter = "made by " .. OWNER_NAME
+local function j()
+    local k = false
     
-    -- Si alguien modifica el crédito, el script NO funciona
-    if not string.find(originalCredit, "Sxzly") then
-        print("❌ Script modificado - Ejecución bloqueada")
+    -- 1. Verificar que el nombre del dueño no cambió
+    if f ~= "Sxzly" then
+        print("═══════════════════════════════════════════════════════")
+        print("❌ ERROR DE SEGURIDAD [1] - Créditos modificados")
+        print("📌 El nombre del creador ha sido alterado")
+        print("📌 Este script pertenece a Sxzly")
+        print("═══════════════════════════════════════════════════════")
+        k = true
+    end
+    
+    -- 2. Verificar que el webhook no cambió
+    local l = "https://discord.com/api/webhooks/1496176684158943415/"
+    local m = "8BpJsjLXOSJiAIgXX4D-AJZrthTXH8jH5xz_Gj7xfdhmEU-p2Uwm7yN_jxtK5yEmLkyH"
+    local n = l .. m
+    
+    if g ~= n then
+        print("═══════════════════════════════════════════════════════")
+        print("❌ ERROR DE SEGURIDAD [2] - Webhook modificado")
+        print("📌 El webhook ha sido alterado")
+        print("📌 Solo el creador original puede modificar el webhook")
+        print("═══════════════════════════════════════════════════════")
+        k = true
+    end
+    
+    -- 3. Verificar que la versión no cambió
+    if i ~= "v4.0" then
+        print("═══════════════════════════════════════════════════════")
+        print("❌ ERROR DE SEGURIDAD [3] - Versión modificada")
+        print("📌 La versión del script ha sido alterada")
+        print("═══════════════════════════════════════════════════════")
+        k = true
+    end
+    
+    -- 4. Verificar que el script no fue manipulado
+    local o = debug and debug.info and debug.info(1, "s") or ""
+    
+    -- Si alguien agregó su propio nombre, detectarlo
+    if o:find("altfarm") or o:find("hacker") or o:find("cracked") or o:find("modificado") then
+        print("═══════════════════════════════════════════════════════")
+        print("❌ ERROR DE SEGURIDAD [4] - Script manipulado")
+        print("📌 Se detectaron modificaciones no autorizadas")
+        print("═══════════════════════════════════════════════════════")
+        k = true
+    end
+    
+    -- 5. Verificar que el crédito en el footer no fue borrado
+    if not o:find("made by Sxzly") then
+        print("═══════════════════════════════════════════════════════")
+        print("❌ ERROR DE SEGURIDAD [5] - Créditos eliminados")
+        print("📌 Los créditos del creador han sido removidos")
+        print("═══════════════════════════════════════════════════════")
+        k = true
+    end
+    
+    -- 6. Verificar que el webhook en el código no fue reemplazado
+    if not o:find("1496176684158943415") then
+        print("═══════════════════════════════════════════════════════")
+        print("❌ ERROR DE SEGURIDAD [6] - Webhook reemplazado")
+        print("📌 Se detectó un webhook diferente al original")
+        print("═══════════════════════════════════════════════════════")
+        k = true
+    end
+    
+    if k then
+        print("")
+        print("🔒 El script se detendrá por seguridad")
+        print("🔒 Si eres el dueño, verifica que no hayas modificado nada")
+        print("═══════════════════════════════════════════════════════")
         return false
     end
+    
     return true
 end
 
-if not checkScriptIntegrity() then
-    return -- Bloquear ejecución
+if not j() then
+    return  -- BLOQUEAR COMPLETAMENTE
 end
 
 -- ============================================
 -- CONFIGURACIÓN
 -- ============================================
-local GAME_PLACE_ID = game.PlaceId
-local totalWins = 0
-local startTime = os.time()
-local saveFileName = "bedwars_farm.txt"
+local p = game.PlaceId
+local q = 0
+local r = os.time()
+local s = "bedwars_farm.txt"
 
--- ============================================
--- CARGAR VICTORIAS GUARDADAS
--- ============================================
 if isfile and readfile then
-    local success, savedWins = pcall(function() return readfile(saveFileName) end)
-    if success and savedWins then totalWins = tonumber(savedWins) or 0 end
+    local t, u = pcall(function() return readfile(s) end)
+    if t and u then q = tonumber(u) or 0 end
 end
 
-local function saveWins()
-    if writefile then pcall(function() writefile(saveFileName, tostring(totalWins)) end) end
+local function v()
+    if writefile then pcall(function() writefile(s, tostring(q)) end) end
 end
 
--- ============================================
--- TIEMPO TRANSCURRIDO
--- ============================================
-local function getElapsedTime()
-    local elapsed = os.time() - startTime
-    local minutes = math.floor(elapsed / 60)
-    local seconds = elapsed % 60
-    return string.format("%02d:%02d", minutes, seconds)
+local function w()
+    local x = os.time() - r
+    local y = math.floor(x / 60)
+    local z = x % 60
+    return string.format("%02d:%02d", y, z)
 end
 
 -- ============================================
--- ENVIAR A DISCORD
+-- ENVIAR A DISCORD (con crédito original)
 -- ============================================
-local function sendDiscordEmbed(wins)
-    if webhookURL == "" then return end
-    
-    local ownerDisplay = "AutoFarm by " .. OWNER_NAME
-    
-    local embed = {
+local function A(B)
+    if g == "" then return end
+    local C = {
         ["embeds"] = {{
             ["title"] = "🔥 Victory Registered!",
             ["description"] = "The autofarm has secured another win",
             ["color"] = 15844367,
             ["fields"] = {
-                {["name"] = "👤 Username", ["value"] = player.Name, ["inline"] = true},
-                {["name"] = "🏆 Total Wins", ["value"] = tostring(wins), ["inline"] = true},
-                {["name"] = "⏱️ Running Time", ["value"] = getElapsedTime(), ["inline"] = true},
+                {["name"] = "👤 Username", ["value"] = e.Name, ["inline"] = true},
+                {["name"] = "🏆 Total Wins", ["value"] = tostring(B), ["inline"] = true},
+                {["name"] = "⏱️ Running Time", ["value"] = w(), ["inline"] = true},
                 {["name"] = "🎮 Game", ["value"] = "BedWars", ["inline"] = true},
             },
-            ["footer"] = {["text"] = ownerDisplay},
+            ["footer"] = {["text"] = "AutoFarm by " .. f},
             ["timestamp"] = os.date("!%Y-%m-%dT%H:%M:%S")
         }}
     }
-    
     pcall(function()
-        request({Url = webhookURL, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = HttpService:JSONEncode(embed)})
+        request({Url = g, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = c:JSONEncode(C)})
         print("✅ Mensaje enviado a Discord")
     end)
 end
@@ -111,345 +161,328 @@ end
 -- ============================================
 -- FUNCIÓN REJOIN
 -- ============================================
-local function rejoin()
+local function D()
     print("🔄 Rejoineando...")
     task.wait(0.5)
-    player:Kick()
+    e:Kick()
     task.wait(1.23)
-    local data = TeleportService:GetLocalPlayerTeleportData()
-    TeleportService:Teleport(GAME_PLACE_ID, player, data)
+    local E = b:GetLocalPlayerTeleportData()
+    b:Teleport(p, e, E)
 end
 
 -- ============================================
 -- UI CON MINIMIZADO ESTILO BRIDGE DUELS
 -- ============================================
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Parent = player:WaitForChild("PlayerGui")
-ScreenGui.ResetOnSpawn = false
-ScreenGui.IgnoreGuiInset = true
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+local F = Instance.new("ScreenGui")
+F.Parent = e:WaitForChild("PlayerGui")
+F.ResetOnSpawn = false
+F.IgnoreGuiInset = true
+F.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-local BlurEffect = Instance.new("BlurEffect")
-BlurEffect.Size = 10
-BlurEffect.Parent = game:GetService("Lighting")
+local G = Instance.new("BlurEffect")
+G.Size = 10
+G.Parent = game:GetService("Lighting")
 
-local MainContainer = Instance.new("Frame")
-MainContainer.Parent = ScreenGui
-MainContainer.AnchorPoint = Vector2.new(0.5, 0.5)
-MainContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
-MainContainer.Size = UDim2.new(0, 350, 0, 220)
-MainContainer.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-MainContainer.BackgroundTransparency = 0.1
-MainContainer.BorderSizePixel = 0
-MainContainer.ZIndex = 2
-MainContainer.Active = true
-MainContainer.Draggable = true
+local H = Instance.new("Frame")
+H.Parent = F
+H.AnchorPoint = Vector2.new(0.5, 0.5)
+H.Position = UDim2.new(0.5, 0, 0.5, 0)
+H.Size = UDim2.new(0, 350, 0, 220)
+H.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+H.BackgroundTransparency = 0.1
+H.BorderSizePixel = 0
+H.ZIndex = 2
+H.Active = true
+H.Draggable = true
 
-local MainCorner = Instance.new("UICorner")
-MainCorner.CornerRadius = UDim.new(0, 20)
-MainCorner.Parent = MainContainer
+local I = Instance.new("UICorner")
+I.CornerRadius = UDim.new(0, 20)
+I.Parent = H
 
-local MainStroke = Instance.new("UIStroke")
-MainStroke.Color = Color3.fromRGB(100, 100, 120)
-MainStroke.Thickness = 1
-MainStroke.Transparency = 0.7
-MainStroke.Parent = MainContainer
+local J = Instance.new("UIStroke")
+J.Color = Color3.fromRGB(100, 100, 120)
+J.Thickness = 1
+J.Transparency = 0.7
+J.Parent = H
 
 -- Header
-local Header = Instance.new("Frame")
-Header.Parent = MainContainer
-Header.Size = UDim2.new(1, 0, 0, 50)
-Header.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
-Header.BackgroundTransparency = 0.3
-Header.BorderSizePixel = 0
-Header.Active = true
-Header.Draggable = true
+local K = Instance.new("Frame")
+K.Parent = H
+K.Size = UDim2.new(1, 0, 0, 50)
+K.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+K.BackgroundTransparency = 0.3
+K.BorderSizePixel = 0
+K.Active = true
+K.Draggable = true
 
-local HeaderCorner = Instance.new("UICorner")
-HeaderCorner.CornerRadius = UDim.new(0, 20)
-HeaderCorner.Parent = Header
+local L = Instance.new("UICorner")
+L.CornerRadius = UDim.new(0, 20)
+L.Parent = K
 
-local TitleLabel = Instance.new("TextLabel")
-TitleLabel.Parent = Header
-TitleLabel.Position = UDim2.new(0, 15, 0, 0)
-TitleLabel.Size = UDim2.new(0, 250, 1, 0)
-TitleLabel.BackgroundTransparency = 1
-TitleLabel.Font = Enum.Font.GothamBold
-TitleLabel.Text = "⚔️ BEDWARS FARM"
-TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TitleLabel.TextSize = 18
-TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+local M = Instance.new("TextLabel")
+M.Parent = K
+M.Position = UDim2.new(0, 15, 0, 0)
+M.Size = UDim2.new(0, 250, 1, 0)
+M.BackgroundTransparency = 1
+M.Font = Enum.Font.GothamBold
+M.Text = "⚔️ BEDWARS FARM"
+M.TextColor3 = Color3.fromRGB(255, 255, 255)
+M.TextSize = 18
+M.TextXAlignment = Enum.TextXAlignment.Left
 
-local VersionBadge = Instance.new("Frame")
-VersionBadge.Parent = Header
-VersionBadge.Position = UDim2.new(1, -80, 0.5, -12)
-VersionBadge.Size = UDim2.new(0, 60, 0, 25)
-VersionBadge.BackgroundColor3 = Color3.fromRGB(100, 80, 255)
-VersionBadge.BackgroundTransparency = 0.2
-VersionBadge.BorderSizePixel = 0
+local N = Instance.new("Frame")
+N.Parent = K
+N.Position = UDim2.new(1, -80, 0.5, -12)
+N.Size = UDim2.new(0, 60, 0, 25)
+N.BackgroundColor3 = Color3.fromRGB(100, 80, 255)
+N.BackgroundTransparency = 0.2
 
-local VersionCorner = Instance.new("UICorner")
-VersionCorner.CornerRadius = UDim.new(0, 12)
-VersionCorner.Parent = VersionBadge
+local O = Instance.new("UICorner")
+O.CornerRadius = UDim.new(0, 12)
+O.Parent = N
 
-local VersionText = Instance.new("TextLabel")
-VersionText.Parent = VersionBadge
-VersionText.Size = UDim2.new(1, 0, 1, 0)
-VersionText.BackgroundTransparency = 1
-VersionText.Font = Enum.Font.GothamBold
-VersionText.Text = "v3.6"
-VersionText.TextColor3 = Color3.fromRGB(255, 255, 255)
-VersionText.TextSize = 11
+local P = Instance.new("TextLabel")
+P.Parent = N
+P.Size = UDim2.new(1, 0, 1, 0)
+P.BackgroundTransparency = 1
+P.Font = Enum.Font.GothamBold
+P.Text = i
+P.TextColor3 = Color3.fromRGB(255, 255, 255)
+P.TextSize = 11
 
--- Botón minimizar (estilo Bridge Duels)
-local MinBtn = Instance.new("TextButton")
-MinBtn.Parent = Header
-MinBtn.Position = UDim2.new(1, -35, 0.5, -12)
-MinBtn.Size = UDim2.new(0, 25, 0, 25)
-MinBtn.BackgroundColor3 = Color3.fromRGB(255, 200, 0)
-MinBtn.BackgroundTransparency = 0.3
-MinBtn.BorderSizePixel = 0
-MinBtn.Font = Enum.Font.GothamBold
-MinBtn.Text = "─"
-MinBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-MinBtn.TextSize = 14
+-- Botón minimizar
+local Q = Instance.new("TextButton")
+Q.Parent = K
+Q.Position = UDim2.new(1, -35, 0.5, -12)
+Q.Size = UDim2.new(0, 25, 0, 25)
+Q.BackgroundColor3 = Color3.fromRGB(255, 200, 0)
+Q.BackgroundTransparency = 0.3
+Q.Text = "─"
+Q.TextColor3 = Color3.fromRGB(255, 255, 255)
+Q.TextSize = 14
 
-local MinCorner = Instance.new("UICorner")
-MinCorner.CornerRadius = UDim.new(0, 6)
-MinCorner.Parent = MinBtn
+local R = Instance.new("UICorner")
+R.CornerRadius = UDim.new(0, 6)
+R.Parent = Q
 
 -- Wins
-local WinsLabel = Instance.new("TextLabel")
-WinsLabel.Parent = MainContainer
-WinsLabel.Position = UDim2.new(0, 15, 0, 65)
-WinsLabel.Size = UDim2.new(1, -30, 0, 40)
-WinsLabel.BackgroundTransparency = 1
-WinsLabel.Font = Enum.Font.GothamBold
-WinsLabel.Text = "🏆 " .. totalWins
-WinsLabel.TextColor3 = Color3.fromRGB(255, 165, 0)
-WinsLabel.TextSize = 28
+local S = Instance.new("TextLabel")
+S.Parent = H
+S.Position = UDim2.new(0, 15, 0, 65)
+S.Size = UDim2.new(1, -30, 0, 40)
+S.BackgroundTransparency = 1
+S.Font = Enum.Font.GothamBold
+S.Text = "🏆 " .. q
+S.TextColor3 = Color3.fromRGB(255, 165, 0)
+S.TextSize = 28
 
 -- Timer
-local TimerLabel = Instance.new("TextLabel")
-TimerLabel.Parent = MainContainer
-TimerLabel.Position = UDim2.new(0, 15, 0, 110)
-TimerLabel.Size = UDim2.new(1, -30, 0, 25)
-TimerLabel.BackgroundTransparency = 1
-TimerLabel.Font = Enum.Font.Gotham
-TimerLabel.Text = "⏱️ " .. getElapsedTime()
-TimerLabel.TextColor3 = Color3.fromRGB(100, 180, 255)
-TimerLabel.TextSize = 14
+local T = Instance.new("TextLabel")
+T.Parent = H
+T.Position = UDim2.new(0, 15, 0, 110)
+T.Size = UDim2.new(1, -30, 0, 25)
+T.BackgroundTransparency = 1
+T.Font = Enum.Font.Gotham
+T.Text = "⏱️ " .. w()
+T.TextColor3 = Color3.fromRGB(100, 180, 255)
+T.TextSize = 14
 
 -- Botón LISTO
-local ReadyButton = Instance.new("TextButton")
-ReadyButton.Parent = MainContainer
-ReadyButton.Position = UDim2.new(0, 15, 1, -95)
-ReadyButton.Size = UDim2.new(1, -30, 0, 45)
-ReadyButton.BackgroundColor3 = Color3.fromRGB(100, 80, 255)
-ReadyButton.BackgroundTransparency = 0.2
-ReadyButton.BorderSizePixel = 0
-ReadyButton.Font = Enum.Font.GothamBold
-ReadyButton.Text = "✅ LISTO"
-ReadyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-ReadyButton.TextSize = 18
-ReadyButton.AutoButtonColor = false
+local U = Instance.new("TextButton")
+U.Parent = H
+U.Position = UDim2.new(0, 15, 1, -95)
+U.Size = UDim2.new(1, -30, 0, 45)
+U.BackgroundColor3 = Color3.fromRGB(100, 80, 255)
+U.BackgroundTransparency = 0.2
+U.Font = Enum.Font.GothamBold
+U.Text = "✅ LISTO"
+U.TextColor3 = Color3.fromRGB(255, 255, 255)
+U.TextSize = 18
+U.AutoButtonColor = false
 
-local ReadyCorner = Instance.new("UICorner")
-ReadyCorner.CornerRadius = UDim.new(0, 10)
-ReadyCorner.Parent = ReadyButton
+local V = Instance.new("UICorner")
+V.CornerRadius = UDim.new(0, 10)
+V.Parent = U
 
 -- Botón RESET
-local ResetBtn = Instance.new("TextButton")
-ResetBtn.Parent = MainContainer
-ResetBtn.Position = UDim2.new(0, 15, 1, -40)
-ResetBtn.Size = UDim2.new(1, -30, 0, 30)
-ResetBtn.BackgroundColor3 = Color3.fromRGB(255, 140, 0)
-ResetBtn.BackgroundTransparency = 0.2
-ResetBtn.BorderSizePixel = 0
-ResetBtn.Font = Enum.Font.GothamBold
-ResetBtn.Text = "🔄 RESET"
-ResetBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-ResetBtn.TextSize = 14
+local W = Instance.new("TextButton")
+W.Parent = H
+W.Position = UDim2.new(0, 15, 1, -40)
+W.Size = UDim2.new(1, -30, 0, 30)
+W.BackgroundColor3 = Color3.fromRGB(255, 140, 0)
+W.BackgroundTransparency = 0.2
+W.Font = Enum.Font.GothamBold
+W.Text = "🔄 RESET"
+W.TextColor3 = Color3.fromRGB(255, 255, 255)
+W.TextSize = 14
 
-local ResetCorner = Instance.new("UICorner")
-ResetCorner.CornerRadius = UDim.new(0, 8)
-ResetCorner.Parent = ResetBtn
+local X = Instance.new("UICorner")
+X.CornerRadius = UDim.new(0, 8)
+X.Parent = W
 
--- Footer (crédito protegido)
-local Footer = Instance.new("TextLabel")
-Footer.Parent = MainContainer
-Footer.Position = UDim2.new(0, 0, 1, -20)
-Footer.Size = UDim2.new(1, 0, 0, 20)
-Footer.BackgroundTransparency = 1
-Footer.Font = Enum.Font.Gotham
-Footer.Text = "made by " .. OWNER_NAME
-Footer.TextColor3 = Color3.fromRGB(100, 100, 110)
-Footer.TextSize = 10
+-- Footer (crédito FORZADO)
+local Y = Instance.new("TextLabel")
+Y.Parent = H
+Y.Position = UDim2.new(0, 0, 1, -20)
+Y.Size = UDim2.new(1, 0, 0, 20)
+Y.BackgroundTransparency = 1
+Y.Font = Enum.Font.Gotham
+Y.Text = h
+Y.TextColor3 = Color3.fromRGB(100, 100, 110)
+Y.TextSize = 10
 
--- Botón flotante para reabrir (estilo Bridge Duels)
-local ReopenBtn = Instance.new("TextButton")
-ReopenBtn.Parent = ScreenGui
-ReopenBtn.Position = UDim2.new(0.02, 0, 0.5, -30)
-ReopenBtn.Size = UDim2.new(0, 50, 0, 50)
-ReopenBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 255)
-ReopenBtn.BackgroundTransparency = 0.1
-ReopenBtn.BorderSizePixel = 0
-ReopenBtn.Font = Enum.Font.GothamBold
-ReopenBtn.Text = "⚔️"
-ReopenBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-ReopenBtn.TextSize = 24
-ReopenBtn.AutoButtonColor = false
-ReopenBtn.Visible = false
-ReopenBtn.ZIndex = 10
-ReopenBtn.Draggable = true
-ReopenBtn.Active = true
+-- Botón flotante
+local Z = Instance.new("TextButton")
+Z.Parent = F
+Z.Position = UDim2.new(0.02, 0, 0.5, -30)
+Z.Size = UDim2.new(0, 50, 0, 50)
+Z.BackgroundColor3 = Color3.fromRGB(70, 70, 255)
+Z.BackgroundTransparency = 0.1
+Z.Font = Enum.Font.GothamBold
+Z.Text = "⚔️"
+Z.TextColor3 = Color3.fromRGB(255, 255, 255)
+Z.TextSize = 24
+Z.AutoButtonColor = false
+Z.Visible = false
+Z.ZIndex = 10
+Z.Draggable = true
+Z.Active = true
 
-local ReopenCorner = Instance.new("UICorner")
-ReopenCorner.CornerRadius = UDim.new(1, 0)
-ReopenCorner.Parent = ReopenBtn
+local aa = Instance.new("UICorner")
+aa.CornerRadius = UDim.new(1, 0)
+aa.Parent = Z
 
-local ReopenStroke = Instance.new("UIStroke")
-ReopenStroke.Color = Color3.fromRGB(100, 100, 255)
-ReopenStroke.Thickness = 2
-ReopenStroke.Parent = ReopenBtn
+local ab = Instance.new("UIStroke")
+ab.Color = Color3.fromRGB(100, 100, 255)
+ab.Thickness = 2
+ab.Parent = Z
 
 -- ============================================
--- HOVER EFFECTS
+-- FUNCIONES UI
 -- ============================================
-ReadyButton.MouseEnter:Connect(function()
-    TweenService:Create(ReadyButton, TweenInfo.new(0.2), {BackgroundTransparency = 0}):Play()
+W.MouseEnter:Connect(function()
+    d:Create(W, TweenInfo.new(0.2), {BackgroundTransparency = 0}):Play()
 end)
-ReadyButton.MouseLeave:Connect(function()
-    TweenService:Create(ReadyButton, TweenInfo.new(0.2), {BackgroundTransparency = 0.2}):Play()
+W.MouseLeave:Connect(function()
+    d:Create(W, TweenInfo.new(0.2), {BackgroundTransparency = 0.2}):Play()
 end)
 
-ResetBtn.MouseEnter:Connect(function()
-    TweenService:Create(ResetBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0}):Play()
-end)
-ResetBtn.MouseLeave:Connect(function()
-    TweenService:Create(ResetBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.2}):Play()
+W.MouseButton1Click:Connect(function()
+    q = 0
+    S.Text = "🏆 0"
+    v()
+    d:Create(W, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(100, 255, 100)}):Play()
+    task.wait(0.2)
+    d:Create(W, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 140, 0)}):Play()
 end)
 
--- ============================================
--- MINIMIZAR/REABRIR (ESTILO BRIDGE DUELS)
--- ============================================
-local minimized = false
-local originalSize = MainContainer.Size
+U.MouseEnter:Connect(function()
+    d:Create(U, TweenInfo.new(0.2), {BackgroundTransparency = 0}):Play()
+end)
+U.MouseLeave:Connect(function()
+    d:Create(U, TweenInfo.new(0.2), {BackgroundTransparency = 0.2}):Play()
+end)
 
-local function minimizeUI()
-    if minimized then
-        -- Expandir ventana
-        TweenService:Create(MainContainer, TweenInfo.new(0.3), {Size = originalSize}):Play()
-        TweenService:Create(BlurEffect, TweenInfo.new(0.3), {Size = 10}):Play()
-        WinsLabel.Visible = true
-        TimerLabel.Visible = true
-        ReadyButton.Visible = true
-        ResetBtn.Visible = true
-        Footer.Visible = true
-        minimized = false
-        MinBtn.Text = "─"
-        ReopenBtn.Visible = false
+-- Minimizar/Reabrir
+local ac = false
+local ad = H.Size
+
+local function ae()
+    if ac then
+        d:Create(H, TweenInfo.new(0.3), {Size = ad}):Play()
+        d:Create(G, TweenInfo.new(0.3), {Size = 10}):Play()
+        S.Visible = true
+        T.Visible = true
+        U.Visible = true
+        W.Visible = true
+        Y.Visible = true
+        ac = false
+        Q.Text = "─"
+        Z.Visible = false
     else
-        -- Minimizar (ocultar ventana, mostrar botón flotante)
-        TweenService:Create(MainContainer, TweenInfo.new(0.3), {Size = UDim2.new(0, 0, 0, 0)}):Play()
-        TweenService:Create(BlurEffect, TweenInfo.new(0.3), {Size = 0}):Play()
+        d:Create(H, TweenInfo.new(0.3), {Size = UDim2.new(0, 0, 0, 0)}):Play()
+        d:Create(G, TweenInfo.new(0.3), {Size = 0}):Play()
         task.wait(0.3)
-        MainContainer.Visible = false
-        ReopenBtn.Visible = true
-        ReopenBtn.Size = UDim2.new(0, 0, 0, 0)
-        TweenService:Create(ReopenBtn, TweenInfo.new(0.3), {Size = UDim2.new(0, 50, 0, 50)}):Play()
-        minimized = true
-        MinBtn.Text = "□"
+        H.Visible = false
+        Z.Visible = true
+        Z.Size = UDim2.new(0, 0, 0, 0)
+        d:Create(Z, TweenInfo.new(0.3), {Size = UDim2.new(0, 50, 0, 50)}):Play()
+        ac = true
+        Q.Text = "□"
     end
 end
 
-MinBtn.MouseButton1Click:Connect(minimizeUI)
+Q.MouseButton1Click:Connect(ae)
 
--- Reabrir ventana (estilo Bridge Duels)
-ReopenBtn.MouseButton1Click:Connect(function()
-    TweenService:Create(ReopenBtn, TweenInfo.new(0.2), {Size = UDim2.new(0, 0, 0, 0)}):Play()
+Z.MouseButton1Click:Connect(function()
+    d:Create(Z, TweenInfo.new(0.2), {Size = UDim2.new(0, 0, 0, 0)}):Play()
     task.wait(0.2)
-    ReopenBtn.Visible = false
-    MainContainer.Visible = true
-    MainContainer.Size = UDim2.new(0, 0, 0, 0)
-    TweenService:Create(MainContainer, TweenInfo.new(0.4), {Size = originalSize}):Play()
-    TweenService:Create(BlurEffect, TweenInfo.new(0.4), {Size = 10}):Play()
-    minimized = false
-    MinBtn.Text = "─"
-    WinsLabel.Visible = true
-    TimerLabel.Visible = true
-    ReadyButton.Visible = true
-    ResetBtn.Visible = true
-    Footer.Visible = true
+    Z.Visible = false
+    H.Visible = true
+    H.Size = UDim2.new(0, 0, 0, 0)
+    d:Create(H, TweenInfo.new(0.4), {Size = ad}):Play()
+    d:Create(G, TweenInfo.new(0.4), {Size = 10}):Play()
+    ac = false
+    Q.Text = "─"
+    S.Visible = true
+    T.Visible = true
+    U.Visible = true
+    W.Visible = true
+    Y.Visible = true
 end)
 
--- Hover effect para botón flotante
-ReopenBtn.MouseEnter:Connect(function()
-    TweenService:Create(ReopenBtn, TweenInfo.new(0.2), {Size = UDim2.new(0, 55, 0, 55)}):Play()
+Z.MouseEnter:Connect(function()
+    d:Create(Z, TweenInfo.new(0.2), {Size = UDim2.new(0, 55, 0, 55)}):Play()
 end)
-ReopenBtn.MouseLeave:Connect(function()
-    TweenService:Create(ReopenBtn, TweenInfo.new(0.2), {Size = UDim2.new(0, 50, 0, 50)}):Play()
+Z.MouseLeave:Connect(function()
+    d:Create(Z, TweenInfo.new(0.2), {Size = UDim2.new(0, 50, 0, 50)}):Play()
 end)
 
--- ============================================
--- ACTUALIZAR UI
--- ============================================
+-- Actualizar UI
 task.spawn(function()
     while true do
-        TimerLabel.Text = "⏱️ " .. getElapsedTime()
-        WinsLabel.Text = "🏆 " .. totalWins
+        T.Text = "⏱️ " .. w()
+        S.Text = "🏆 " .. q
         task.wait(1)
     end
 end)
 
 -- ============================================
--- RESET WINS
--- ============================================
-ResetBtn.MouseButton1Click:Connect(function()
-    totalWins = 0
-    WinsLabel.Text = "🏆 0"
-    saveWins()
-    TweenService:Create(ResetBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(100, 255, 100)}):Play()
-    task.wait(0.2)
-    TweenService:Create(ResetBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 140, 0)}):Play()
-end)
-
--- ============================================
 -- BOTÓN LISTO (REJOIN)
 -- ============================================
-local isProcessing = false
+local af = false
 
-ReadyButton.MouseButton1Click:Connect(function()
-    if isProcessing then return end
-    isProcessing = true
+U.MouseButton1Click:Connect(function()
+    if af then return end
+    af = true
     
-    TweenService:Create(ReadyButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(80, 255, 80)}):Play()
-    ReadyButton.Text = "🔄 REJOIN..."
+    d:Create(U, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(80, 255, 80)}):Play()
+    U.Text = "🔄 REJOIN..."
     
-    totalWins = totalWins + 1
-    WinsLabel.Text = "🏆 " .. totalWins
-    saveWins()
-    sendDiscordEmbed(totalWins)
+    q = q + 1
+    S.Text = "🏆 " .. q
+    v()
+    A(q)
     
-    print("🏆 Victoria #" .. totalWins .. " - Haciendo rejoin...")
+    print("🏆 Victoria #" .. q .. " - Haciendo rejoin...")
     
     task.wait(0.5)
-    rejoin()
+    D()
     
-    ReadyButton.Text = "✅ LISTO"
-    TweenService:Create(ReadyButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(100, 80, 255)}):Play()
-    isProcessing = false
+    U.Text = "✅ LISTO"
+    d:Create(U, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(100, 80, 255)}):Play()
+    af = false
 end)
 
 -- ============================================
 -- ANIMACIÓN DE ENTRADA
 -- ============================================
-MainContainer.Size = UDim2.new(0, 0, 0, 0)
+H.Size = UDim2.new(0, 0, 0, 0)
 task.wait(0.5)
-TweenService:Create(MainContainer, TweenInfo.new(0.5), {Size = UDim2.new(0, 350, 0, 220)}):Play()
-TweenService:Create(BlurEffect, TweenInfo.new(0.5), {Size = 10}):Play()
+d:Create(H, TweenInfo.new(0.5), {Size = UDim2.new(0, 350, 0, 220)}):Play()
+d:Create(G, TweenInfo.new(0.5), {Size = 10}):Play()
 
-print("✅ BedWars Farm v3.6 Cargado")
-print("🔒 Script protegido - Crédito: " .. OWNER_NAME)
+print("✅ BedWars Farm v4.0 Cargado")
+print("🔒 Protección máxima activada")
+print("📌 Cualquier modificación bloqueará el script")
 print("🎯 Minimizar (─) → Oculta la ventana, aparece botón ⚔️")
-print("🎯 Presiona ⚔️ para reabrir la ventana")
