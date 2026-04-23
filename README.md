@@ -18,4 +18,5 @@ A specialized and lightweight autofarm script for BedWars, designed for efficien
 ## Quick Load (Recommended)
 
 ```lua
-loadstring(game:HttpGet("[https://raw.githubusercontent.com/Sxzly/BedWarsAuto/main/script.lua](https://raw.githubusercontent.com/Sxzly/BedWarsAuto/main/script.lua)"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Sxzly/BedWarsAuto/main/script.lua"))()
+```
